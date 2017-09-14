@@ -10,13 +10,15 @@ import cv2
 import numpy as np
 
 class Resizer(object):
+    # resize image to a fix width/height 
     
     def __init__(self, toWidth, toHeight):
-        # self.img = image
+        # final size wanted
         self.width = toWidth
         self.height = toHeight
     
     def resize(self, img):
+        # img should be a image loaded by cv2.imread() 
         oWidth = img.shape[1]
         oHeight = img.shape[0]
         meanningWd, meanningHt = Resizer.scaleSize(oWidth, oHeight, self.width, self.height)
@@ -28,11 +30,19 @@ class Resizer(object):
         return image
 
     @staticmethod
-    def scaleSize(fromWidth, fromHeight, toWidth, toHeight):
+    def scaleBy(fromWidth, fromHeight, toWidth, toHeight):
         # calculate useful size when scale by rate
         toRate = toHeight * 10000 / toWidth
         originRate = fromHeight * 10000 / fromWidth
         if originRate > toRate:
+            return "y"
+        return "x"
+
+    @staticmethod
+    def scaleSize(fromWidth, fromHeight, toWidth, toHeight):
+        # calculate useful size when scale by rate
+        scaleBy = Resizer.scaleBy(fromWidth, fromHeight, toWidth, toHeight)
+        if scaleBy == "y":
             nx = fromWidth * 1.0 * toHeight / fromHeight
             return int(nx), toHeight
         else:
